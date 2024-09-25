@@ -4,18 +4,16 @@ import java.util.List;
 public class Departamento {
     private String id;
     private String nombre;
-    private int capacidadMaxima;
     private List<Empleado> empleados;
+    private int capacidadMaxima; // Nuevo atributo para capacidad
 
-    // Constructor
     public Departamento(String id, String nombre, int capacidadMaxima) {
         this.id = id;
         this.nombre = nombre;
-        this.capacidadMaxima = capacidadMaxima;
         this.empleados = new ArrayList<>();
+        this.capacidadMaxima = capacidadMaxima;
     }
 
-    // Getters y Setters
     public String getId() {
         return id;
     }
@@ -24,53 +22,40 @@ public class Departamento {
         return nombre;
     }
 
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public int getCapacidadMaxima() {
-        return capacidadMaxima;
-    }
-
-    public void setCapacidadMaxima(int capacidadMaxima) {
-        this.capacidadMaxima = capacidadMaxima;
-    }
-
     public List<Empleado> getEmpleados() {
         return empleados;
     }
 
-    // Método para agregar un empleado al departamento
+    // Método para agregar un empleado con gestión de excepciones
     public void agregarEmpleado(Empleado empleado) throws GestionException {
         if (empleados.size() >= capacidadMaxima) {
-            throw new GestionException("Capacidad máxima del departamento alcanzada.");
+            throw new GestionException("El departamento ha alcanzado su capacidad máxima.");
         }
         empleados.add(empleado);
+        empleado.setDepartamentoId(this.id);
     }
 
-    // Método para eliminar un empleado por ID
-    public void eliminarEmpleadoPorId(String id) throws GestionException {
-        Empleado empleado = buscarEmpleadoPorId(id);
-        if (empleado != null) {
-            empleados.remove(empleado);
-        } else {
-            throw new GestionException("Empleado con ID " + id + " no encontrado.");
+    // Método para eliminar un empleado con gestión de excepciones
+    public void eliminarEmpleado(Empleado empleado) throws GestionException {
+        if (!empleados.contains(empleado)) {
+            throw new GestionException("El empleado no existe en este departamento.");
         }
+        empleados.remove(empleado);
+        empleado.setDepartamentoId(null);
     }
 
-    // Método para buscar un empleado por ID
-    public Empleado buscarEmpleadoPorId(String id) {
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Departamento ID: ").append(id)
+                .append("\nNombre: ").append(nombre)
+                .append("\nEmpleados:\n");
+
         for (Empleado empleado : empleados) {
-            if (empleado.getId().equals(id)) {
-                return empleado;
-            }
+            sb.append(empleado).append("\n");
         }
-        return null;
+        return sb.toString();
     }
 
-    // Método para actualizar el nombre y capacidad del departamento
-    public void actualizarDepartamento(String nuevoNombre, int nuevaCapacidadMaxima) {
-        setNombre(nuevoNombre);
-        setCapacidadMaxima(nuevaCapacidadMaxima);
-    }
 }
+
