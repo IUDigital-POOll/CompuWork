@@ -39,16 +39,16 @@ public class Main {
         botonAgregarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));  // Aplicamos fuente en negrita y tamaño 16
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 1;  // Ocupa una columna
+        gbc.gridwidth = 2;  // El botón ocupa dos columnas
         gbc.anchor = GridBagConstraints.CENTER;  // Centramos el botón
         gbc.fill = GridBagConstraints.NONE;  // Evitamos que el botón ocupe todo el ancho
         panel.add(botonAgregarEmpleado, gbc);
 
-        // Botón "Generar Reporte"
+        // Botón "Generar Reporte" debajo del botón "Agregar Empleado"
         JButton botonGenerarReporte = new JButton("Generar Reporte");
         botonGenerarReporte.setFont(new Font("Arial", Font.BOLD, 16));  // Aplicamos fuente en negrita y tamaño 16
-        gbc.gridx = 1;
-        gbc.gridy = 1;
+        gbc.gridx = 0;
+        gbc.gridy = 2;
         panel.add(botonGenerarReporte, gbc);
 
         // Área de texto para mostrar información (observaciones)
@@ -56,7 +56,7 @@ public class Main {
         areaTexto.setFont(new Font("Arial", Font.PLAIN, 14));  // Fuente para el área de texto
         JScrollPane scrollPane = new JScrollPane(areaTexto);
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.gridwidth = 2;  // El área de texto ocupa dos columnas
         gbc.fill = GridBagConstraints.BOTH;  // Ocupa todo el espacio disponible en ambos ejes
         gbc.weightx = 1;
