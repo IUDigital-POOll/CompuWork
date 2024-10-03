@@ -23,11 +23,20 @@ public class ReporteDesempenio {
 
     @Override
     public String toString() {
-        return "\nReporte de Desempeño del Empleado:\n" +
-                empleado +  // Esto invocará el toString() del Empleado
-                "Evaluación: " + evaluacion +
-                "\nComentarios: " + comentarios + "\n";
+        return String.format(
+                "------------------------------------\n" +
+                        "Reporte de Desempeño del Empleado:\n" +
+                        "Nombre: %s %s\n" +
+                        "ID: %s\n" +
+                        "Evaluación: %s\n" +
+                        "Comentarios: %s\n" +
+                        "------------------------------------\n",
+                empleado.getNombre(),  // Suponiendo que Empleado tiene un método getNombre()
+                empleado.getApellido(),  // Suponiendo que Empleado tiene un método getApellido()
+                empleado.getId(),  // Suponiendo que Empleado tiene un método getId()
+                evaluacion,
+                comentarios
+        );
     }
-
 }
 
