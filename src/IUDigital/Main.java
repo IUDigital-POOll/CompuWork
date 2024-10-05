@@ -7,212 +7,161 @@ import java.util.List;
 
 public class Main {
 
-    private static List<Departamento> departamentos = new ArrayList<>();
-    private static List<ReporteDesempenio> reportes = new ArrayList<>();
+    private static Departamento departamento;  // Usaremos un departamento global para gestionar los empleados
+    private static List<ReporteDesempenio> reportes = new ArrayList<>();  // Lista para almacenar los reportes de desempeño
 
     public static void main(String[] args) {
+        // Inicializamos el departamento
+        departamento = new Departamento("D1", "Recursos Humanos", 10);
+
+        // Crear la ventana
         JFrame frame = new JFrame("Gestión de Empleados y Departamentos");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(600, 500);
+        frame.setSize(500, 400);
 
-        // Ventana emergente con aviso inicial
-        JOptionPane.showMessageDialog(null,
-                "Asegúrese de crear el departamento antes de agregar un empleado para poder asociarlo.",
-                "Aviso",
-                JOptionPane.INFORMATION_MESSAGE);
-
+        // Crear el panel con GridBagLayout
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(10, 10, 10, 10);  // Espacio alrededor de los componentes
 
+        // Crear componentes para la ventana
         JLabel label = new JLabel("Seleccione una acción:");
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        label.setFont(new Font("Arial", Font.BOLD, 20));
+        label.setHorizontalAlignment(SwingConstants.CENTER);  // Centramos el texto
+        label.setFont(new Font("Arial", Font.BOLD, 20));  // Aplicamos fuente en negrita y tamaño 20
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.gridwidth = 2;  // El label ocupa dos columnas
+        gbc.anchor = GridBagConstraints.CENTER;  // Centrar el texto
         panel.add(label, gbc);
 
-        // Botón para agregar empleados
+        // Botón "Agregar Empleado"
         JButton botonAgregarEmpleado = new JButton("Agregar Empleado");
-        botonAgregarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));
+        botonAgregarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));  // Aplicamos fuente en negrita y tamaño 16
         gbc.gridx = 0;
         gbc.gridy = 1;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 2;  // El botón ocupa dos columnas
+        gbc.anchor = GridBagConstraints.CENTER;  // Centramos el botón
+        gbc.fill = GridBagConstraints.NONE;  // Evitamos que el botón ocupe todo el ancho
         panel.add(botonAgregarEmpleado, gbc);
 
-        // Botón para crear departamentos
-        JButton botonCrearDepartamento = new JButton("Crear Departamento");
-        botonCrearDepartamento.setFont(new Font("Arial", Font.BOLD, 16));
+        // Botón "Generar Reporte" debajo del botón "Agregar Empleado"
+        JButton botonGenerarReporte = new JButton("Generar Reporte");
+        botonGenerarReporte.setFont(new Font("Arial", Font.BOLD, 16));  // Aplicamos fuente en negrita y tamaño 16
         gbc.gridx = 0;
         gbc.gridy = 2;
-        panel.add(botonCrearDepartamento, gbc);
-
-        // Botón para eliminar departamentos
-        JButton botonEliminarDepartamento = new JButton("Eliminar Departamento");
-        botonEliminarDepartamento.setFont(new Font("Arial", Font.BOLD, 16));
-        gbc.gridx = 0;
-        gbc.gridy = 3;
-        panel.add(botonEliminarDepartamento, gbc);
-
-        // Botón para actualizar departamentos
-        JButton botonActualizarDepartamento = new JButton("Actualizar Departamento");
-        botonActualizarDepartamento.setFont(new Font("Arial", Font.BOLD, 16));
-        gbc.gridx = 0;
-        gbc.gridy = 4;
-        panel.add(botonActualizarDepartamento, gbc);
-
-        JButton botonGenerarReporte = new JButton("Generar Reporte");
-        botonGenerarReporte.setFont(new Font("Arial", Font.BOLD, 16));
-        gbc.gridx = 0;
-        gbc.gridy = 5;
         panel.add(botonGenerarReporte, gbc);
 
-        JButton botonEliminarEmpleado = new JButton("Eliminar Empleado");
-        botonEliminarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));
-        gbc.gridx = 0;
-        gbc.gridy = 6;
-        panel.add(botonEliminarEmpleado, gbc);
-
-        JButton botonActualizarEmpleado = new JButton("Actualizar Empleado");
-        botonActualizarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));
-        gbc.gridx = 0;
-        gbc.gridy = 7;
-        panel.add(botonActualizarEmpleado, gbc);
-
-        JTextArea areaTexto = new JTextArea(10, 30);
-        areaTexto.setFont(new Font("Arial", Font.PLAIN, 14));
+        // Área de texto para mostrar información (observaciones)
+        JTextArea areaTexto = new JTextArea(10, 30);  // Área de texto para mostrar información
+        areaTexto.setFont(new Font("Arial", Font.PLAIN, 14));  // Fuente para el área de texto
         JScrollPane scrollPane = new JScrollPane(areaTexto);
         gbc.gridx = 0;
-        gbc.gridy = 8;
-        gbc.gridwidth = 2;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.gridy = 3;
+        gbc.gridwidth = 2;  // El área de texto ocupa dos columnas
+        gbc.fill = GridBagConstraints.BOTH;  // Ocupa todo el espacio disponible en ambos ejes
         gbc.weightx = 1;
-        gbc.weighty = 1;
+        gbc.weighty = 1;  // Aumentamos el peso vertical para que el área de texto crezca
         panel.add(scrollPane, gbc);
 
+        // Agregar el panel a la ventana
         frame.add(panel);
+
+        // Mostrar la ventana
         frame.setVisible(true);
 
-        // Lógica para agregar empleados
+        // Acción al presionar el botón de agregar empleado
         botonAgregarEmpleado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 agregarEmpleado();
             }
         });
 
-        // Lógica para crear departamentos
-        botonCrearDepartamento.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                crearDepartamento();
-            }
-        });
-
-        // Lógica para eliminar departamentos
-        botonEliminarDepartamento.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                eliminarDepartamento();
-            }
-        });
-
-        // Lógica para actualizar departamentos
-        botonActualizarDepartamento.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                actualizarDepartamento();
-            }
-        });
-
+        // Acción al presionar el botón de generar reporte
         botonGenerarReporte.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 generarReporte(areaTexto);
             }
         });
-
-        botonEliminarEmpleado.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                eliminarEmpleado();
-            }
-        });
-
-        botonActualizarEmpleado.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                actualizarEmpleado();
-            }
-        });
     }
 
+    // Método para agregar empleado
     public static void agregarEmpleado() {
-        // Implementación existente para agregar empleados
-    }
+        // Crear ventana de diálogo para ingresar los datos del empleado
+        JTextField idField = new JTextField();
+        JTextField nombreField = new JTextField();
+        JTextField apellidoField = new JTextField();
+        String[] tipoEmpleado = {"Permanente", "Temporal"};
+        JComboBox<String> tipoEmpleadoBox = new JComboBox<>(tipoEmpleado);
 
-    public static void crearDepartamento() {
-        String id = JOptionPane.showInputDialog("Ingrese el ID del departamento:");
-        String nombre = JOptionPane.showInputDialog("Ingrese el nombre del departamento:");
-        int capacidadMaxima = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la capacidad máxima de empleados:"));
+        // Crear formulario para el diálogo
+        Object[] inputFields = {
+                "ID:", idField,
+                "Nombre:", nombreField,
+                "Apellido:", apellidoField,
+                "Tipo de Empleado:", tipoEmpleadoBox
+        };
 
-        Departamento nuevoDepartamento = new Departamento(id, nombre, capacidadMaxima);
-        departamentos.add(nuevoDepartamento);
+        int option = JOptionPane.showConfirmDialog(null, inputFields, "Agregar Empleado", JOptionPane.OK_CANCEL_OPTION);
 
-        String detallesDepartamento = String.format("ID: %s\nNombre: %s\nCapacidad máxima: %d",
-                id, nombre, capacidadMaxima);
+        if (option == JOptionPane.OK_OPTION) {
+            String id = idField.getText();
+            String nombre = nombreField.getText();
+            String apellido = apellidoField.getText();
+            String tipo = (String) tipoEmpleadoBox.getSelectedItem();
 
-        JOptionPane.showMessageDialog(null, "Departamento creado con éxito:\n" + detallesDepartamento);
-    }
+            Empleado empleado;
+            if (tipo.equals("Permanente")) {
+                empleado = new EmpleadoPermanente(id, nombre, apellido, 50000);  // Salario fijo para ejemplo
+            } else {
+                empleado = new EmpleadoTemporal(id, nombre, apellido, 12);  // Contrato de 12 meses para ejemplo
+            }
 
-    public static void eliminarDepartamento() {
-        String[] departamentoNombres = departamentos.stream().map(Departamento::getNombre).toArray(String[]::new);
-        String departamentoSeleccionado = (String) JOptionPane.showInputDialog(null,
-                "Seleccione un departamento a eliminar:",
-                "Eliminar Departamento",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                departamentoNombres,
-                departamentoNombres[0]);
-
-        if (departamentoSeleccionado != null) {
-            departamentos.removeIf(departamento -> departamento.getNombre().equals(departamentoSeleccionado));
-            JOptionPane.showMessageDialog(null, "Departamento eliminado con éxito: " + departamentoSeleccionado);
-        }
-    }
-
-    public static void actualizarDepartamento() {
-        String[] departamentoNombres = departamentos.stream().map(Departamento::getNombre).toArray(String[]::new);
-        String departamentoSeleccionado = (String) JOptionPane.showInputDialog(null,
-                "Seleccione un departamento a actualizar:",
-                "Actualizar Departamento",
-                JOptionPane.PLAIN_MESSAGE,
-                null,
-                departamentoNombres,
-                departamentoNombres[0]);
-
-        if (departamentoSeleccionado != null) {
-            Departamento departamento = departamentos.stream()
-                    .filter(dep -> dep.getNombre().equals(departamentoSeleccionado))
-                    .findFirst()
-                    .orElse(null);
-
-            if (departamento != null) {
-                String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre del departamento:", departamento.getNombre());
-                int nuevaCapacidad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la nueva capacidad máxima:", departamento.getCapacidadMaxima()));
-
-                departamento.setNombre(nuevoNombre);
-                departamento.setCapacidadMaxima(nuevaCapacidad);
-
-                JOptionPane.showMessageDialog(null, "Departamento actualizado con éxito:\nNombre: " + nuevoNombre + "\nCapacidad: " + nuevaCapacidad);
+            // Intentar agregar el empleado al departamento
+            try {
+                departamento.agregarEmpleado(empleado);
+                JOptionPane.showMessageDialog(null, "Empleado agregado exitosamente.");
+            } catch (GestionException ex) {
+                JOptionPane.showMessageDialog(null, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
+    // Método para generar reporte
     public static void generarReporte(JTextArea areaTexto) {
-        // Implementación existente para generar reportes
-    }
+        // Seleccionar un empleado para generar el reporte
+        List<Empleado> empleados = departamento.getEmpleados();
+        if (empleados.isEmpty()) {
+            JOptionPane.showMessageDialog(null, "No hay empleados en el departamento.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
-    public static void eliminarEmpleado() {
-        // Implementación para eliminar empleados
-    }
+        String[] empleadosArray = empleados.stream().map(Empleado::getNombre).toArray(String[]::new);
+        JComboBox<String> empleadoBox = new JComboBox<>(empleadosArray);
 
-    public static void actualizarEmpleado() {
-        // Implementación para actualizar empleados
+        JTextField evaluacionField = new JTextField();
+        JTextField comentariosField = new JTextField();
+
+        // Crear formulario para el diálogo
+        Object[] inputFields = {
+                "Seleccione Empleado:", empleadoBox,
+                "Evaluación:", evaluacionField,
+                "Comentarios:", comentariosField
+        };
+
+        int option = JOptionPane.showConfirmDialog(null, inputFields, "Generar Reporte", JOptionPane.OK_CANCEL_OPTION);
+
+        if (option == JOptionPane.OK_OPTION) {
+            Empleado empleadoSeleccionado = empleados.get(empleadoBox.getSelectedIndex());
+            String evaluacion = evaluacionField.getText();
+            String comentarios = comentariosField.getText();
+
+            // Crear el reporte de desempeño
+            ReporteDesempenio reporte = new ReporteDesempenio(empleadoSeleccionado, evaluacion, comentarios);
+            reportes.add(reporte);
+
+            // Mostrar el reporte en el área de texto
+            areaTexto.append(reporte.toString() + "\n");
+        }
     }
 }
+
