@@ -120,6 +120,13 @@ public class Main {
                 departamentoNombres,
                 departamentoNombres[0]);
 
+        StringBuilder detallesEmpleado = new StringBuilder();
+        detallesEmpleado.append("ID: ").append(id).append("\n");
+        detallesEmpleado.append("Nombre: ").append(nombre).append("\n");
+        detallesEmpleado.append("Apellido: ").append(apellido).append("\n");
+        detallesEmpleado.append("Tipo: ").append(tipo).append("\n");
+        detallesEmpleado.append("Departamento: ").append(departamentoSeleccionado).append("\n");
+
         if (tipo.equalsIgnoreCase("Permanente")) {
             double salario = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el salario del empleado:"));
             EmpleadoPermanente nuevoEmpleado = new EmpleadoPermanente(id, nombre, apellido, salario);
@@ -130,7 +137,8 @@ public class Main {
                         .orElse(null);
                 if (departamento != null) {
                     departamento.agregarEmpleado(nuevoEmpleado);
-                    JOptionPane.showMessageDialog(null, "Empleado agregado con éxito.");
+                    detallesEmpleado.append("Salario: ").append(salario).append("\n");
+                    JOptionPane.showMessageDialog(null, "Empleado agregado con éxito:\n" + detallesEmpleado);
                 }
             } catch (GestionException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -145,7 +153,8 @@ public class Main {
                         .orElse(null);
                 if (departamento != null) {
                     departamento.agregarEmpleado(nuevoEmpleado);
-                    JOptionPane.showMessageDialog(null, "Empleado agregado con éxito.");
+                    detallesEmpleado.append("Duración del contrato: ").append(duracionContrato).append(" meses\n");
+                    JOptionPane.showMessageDialog(null, "Empleado agregado con éxito:\n" + detallesEmpleado);
                 }
             } catch (GestionException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
@@ -160,7 +169,11 @@ public class Main {
 
         Departamento nuevoDepartamento = new Departamento(id, nombre, capacidadMaxima);
         departamentos.add(nuevoDepartamento);
-        JOptionPane.showMessageDialog(null, "Departamento creado con éxito.");
+
+        String detallesDepartamento = String.format("ID: %s\nNombre: %s\nCapacidad máxima: %d",
+                id, nombre, capacidadMaxima);
+
+        JOptionPane.showMessageDialog(null, "Departamento creado con éxito:\n" + detallesDepartamento);
     }
 
     public static void generarReporte(JTextArea areaTexto) {
