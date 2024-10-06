@@ -15,6 +15,12 @@ public class Main {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(600, 400);
 
+        // Ventana emergente con aviso inicial
+        JOptionPane.showMessageDialog(null,
+                "Asegúrese de crear el departamento antes de agregar un empleado para poder asociarlo.",
+                "Aviso",
+                JOptionPane.INFORMATION_MESSAGE);
+
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
