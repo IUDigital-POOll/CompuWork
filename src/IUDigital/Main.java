@@ -7,15 +7,13 @@ import java.util.List;
 
 public class Main {
 
-    private static Departamento departamento;
+    private static List<Departamento> departamentos = new ArrayList<>();
     private static List<ReporteDesempenio> reportes = new ArrayList<>();
 
     public static void main(String[] args) {
-        departamento = new Departamento("D1", "Recursos Humanos", 10);
-
         JFrame frame = new JFrame("Gestión de Empleados y Departamentos");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(500, 400);
+        frame.setSize(600, 400);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -37,29 +35,35 @@ public class Main {
         gbc.gridwidth = 2;
         panel.add(botonAgregarEmpleado, gbc);
 
+        JButton botonCrearDepartamento = new JButton("Crear Departamento");
+        botonCrearDepartamento.setFont(new Font("Arial", Font.BOLD, 16));
+        gbc.gridx = 0;
+        gbc.gridy = 2;
+        panel.add(botonCrearDepartamento, gbc);
+
         JButton botonGenerarReporte = new JButton("Generar Reporte");
         botonGenerarReporte.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         panel.add(botonGenerarReporte, gbc);
 
         JButton botonEliminarEmpleado = new JButton("Eliminar Empleado");
         botonEliminarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         panel.add(botonEliminarEmpleado, gbc);
 
         JButton botonActualizarEmpleado = new JButton("Actualizar Empleado");
         botonActualizarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         panel.add(botonActualizarEmpleado, gbc);
 
         JTextArea areaTexto = new JTextArea(10, 30);
         areaTexto.setFont(new Font("Arial", Font.PLAIN, 14));
         JScrollPane scrollPane = new JScrollPane(areaTexto);
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.gridwidth = 2;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1;
@@ -72,6 +76,12 @@ public class Main {
         botonAgregarEmpleado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 agregarEmpleado();
+            }
+        });
+
+        botonCrearDepartamento.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                crearDepartamento();
             }
         });
 
@@ -100,12 +110,28 @@ public class Main {
         String apellido = JOptionPane.showInputDialog("Ingrese el apellido del empleado:");
         String tipo = JOptionPane.showInputDialog("Ingrese el tipo de empleado (Permanente/Temporal):");
 
+        // Mostrar un combo box para seleccionar un departamento
+        String[] departamentoNombres = departamentos.stream().map(Departamento::getNombre).toArray(String[]::new);
+        String departamentoSeleccionado = (String) JOptionPane.showInputDialog(null,
+                "Seleccione un departamento:",
+                "Seleccionar Departamento",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                departamentoNombres,
+                departamentoNombres[0]);
+
         if (tipo.equalsIgnoreCase("Permanente")) {
             double salario = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el salario del empleado:"));
             EmpleadoPermanente nuevoEmpleado = new EmpleadoPermanente(id, nombre, apellido, salario);
             try {
-                departamento.agregarEmpleado(nuevoEmpleado);
-                JOptionPane.showMessageDialog(null, "Empleado agregado con éxito.");
+                Departamento departamento = departamentos.stream()
+                        .filter(dep -> dep.getNombre().equals(departamentoSeleccionado))
+                        .findFirst()
+                        .orElse(null);
+                if (departamento != null) {
+                    departamento.agregarEmpleado(nuevoEmpleado);
+                    JOptionPane.showMessageDialog(null, "Empleado agregado con éxito.");
+                }
             } catch (GestionException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
@@ -113,31 +139,53 @@ public class Main {
             int duracionContrato = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la duración del contrato en meses:"));
             EmpleadoTemporal nuevoEmpleado = new EmpleadoTemporal(id, nombre, apellido, duracionContrato);
             try {
-                departamento.agregarEmpleado(nuevoEmpleado);
-                JOptionPane.showMessageDialog(null, "Empleado agregado con éxito.");
+                Departamento departamento = departamentos.stream()
+                        .filter(dep -> dep.getNombre().equals(departamentoSeleccionado))
+                        .findFirst()
+                        .orElse(null);
+                if (departamento != null) {
+                    departamento.agregarEmpleado(nuevoEmpleado);
+                    JOptionPane.showMessageDialog(null, "Empleado agregado con éxito.");
+                }
             } catch (GestionException ex) {
                 JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             }
         }
     }
 
+    public static void crearDepartamento() {
+        String id = JOptionPane.showInputDialog("Ingrese el ID del departamento:");
+        String nombre = JOptionPane.showInputDialog("Ingrese el nombre del departamento:");
+        int capacidadMaxima = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la capacidad máxima de empleados:"));
+
+        Departamento nuevoDepartamento = new Departamento(id, nombre, capacidadMaxima);
+        departamentos.add(nuevoDepartamento);
+        JOptionPane.showMessageDialog(null, "Departamento creado con éxito.");
+    }
+
     public static void generarReporte(JTextArea areaTexto) {
-        areaTexto.setText(departamento.toString());
+        StringBuilder sb = new StringBuilder();
+        for (Departamento d : departamentos) {
+            sb.append(d.toString()).append("\n");
+        }
+        areaTexto.setText(sb.toString());
     }
 
     public static void eliminarEmpleado() {
         String id = JOptionPane.showInputDialog("Ingrese el ID del empleado que desea eliminar:");
-        Empleado empleado = departamento.buscarEmpleadoPorId(id);
-        if (empleado != null) {
-            try {
-                departamento.eliminarEmpleado(empleado);
-                JOptionPane.showMessageDialog(null, "Empleado eliminado con éxito.");
-            } catch (GestionException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        for (Departamento departamento : departamentos) {
+            Empleado empleado = departamento.buscarEmpleadoPorId(id);
+            if (empleado != null) {
+                try {
+                    departamento.eliminarEmpleado(empleado);
+                    JOptionPane.showMessageDialog(null, "Empleado eliminado con éxito.");
+                    return;
+                } catch (GestionException ex) {
+                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                }
             }
-        } else {
-            JOptionPane.showMessageDialog(null, "Empleado no encontrado.");
         }
+        JOptionPane.showMessageDialog(null, "Empleado no encontrado.");
     }
 
     public static void actualizarEmpleado() {
@@ -145,11 +193,15 @@ public class Main {
         String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre:");
         String nuevoApellido = JOptionPane.showInputDialog("Ingrese el nuevo apellido:");
 
-        try {
-            departamento.actualizarEmpleado(id, nuevoNombre, nuevoApellido);
-            JOptionPane.showMessageDialog(null, "Empleado actualizado con éxito.");
-        } catch (GestionException ex) {
-            JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        for (Departamento departamento : departamentos) {
+            try {
+                departamento.actualizarEmpleado(id, nuevoNombre, nuevoApellido);
+                JOptionPane.showMessageDialog(null, "Empleado actualizado con éxito.");
+                return;
+            } catch (GestionException ex) {
+                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
+        JOptionPane.showMessageDialog(null, "Empleado no encontrado.");
     }
 }
