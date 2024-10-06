@@ -6,19 +6,5 @@ public class EmpleadoPermanente extends Empleado {
         this.salario = salario;
     }
 
-    public double getSalario() {
-        return salario;
-    }
-
-    public void setSalario(double salario) {
-        this.salario = salario;
-    }
-
-    @Override
-    public String toString() {
-        return "EmpleadoPermanente{" +
-                "salario=" + salario +
-                ", " + super.toString() +
-                '}';
-    }
+    // Otros métodos específicos de EmpleadoPermanente
 }

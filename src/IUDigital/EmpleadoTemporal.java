@@ -6,19 +6,6 @@ public class EmpleadoTemporal extends Empleado {
         this.duracionContrato = duracionContrato;
     }
 
-    public int getDuracionContrato() {
-        return duracionContrato;
-    }
-
-    public void setDuracionContrato(int duracionContrato) {
-        this.duracionContrato = duracionContrato;
-    }
-
-    @Override
-    public String toString() {
-        return "EmpleadoTemporal{" +
-                "duracionContrato=" + duracionContrato +
-                ", " + super.toString() +
-                '}';
-    }
+    // Otros métodos específicos de EmpleadoTemporal
 }
+
