@@ -3,14 +3,12 @@ public class Empleado {
     private String nombre;
     private String apellido;
 
-    // Constructor
     public Empleado(String id, String nombre, String apellido) {
         this.id = id;
         this.nombre = nombre;
         this.apellido = apellido;
     }
 
-    // Métodos get
     public String getId() {
         return id;
     }
@@ -23,7 +21,6 @@ public class Empleado {
         return apellido;
     }
 
-    // Métodos set
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
@@ -32,9 +29,8 @@ public class Empleado {
         this.apellido = apellido;
     }
 
-    // Método toString para mostrar información del empleado
     @Override
     public String toString() {
-        return "ID: " + id + ", Nombre: " + nombre + " " + apellido;
+        return String.format("ID: %s\nNombre: %s %s\n", id, nombre, apellido);
     }
 }
