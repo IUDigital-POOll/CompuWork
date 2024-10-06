@@ -108,7 +108,15 @@ public class Main {
         String id = JOptionPane.showInputDialog("Ingrese el ID del empleado:");
         String nombre = JOptionPane.showInputDialog("Ingrese el nombre del empleado:");
         String apellido = JOptionPane.showInputDialog("Ingrese el apellido del empleado:");
-        String tipo = JOptionPane.showInputDialog("Ingrese el tipo de empleado (Permanente/Temporal):");
+
+        // Crear un JComboBox para seleccionar el tipo de empleado
+        String[] tiposEmpleado = {"Permanente", "Temporal"};
+        JComboBox<String> comboBoxTipo = new JComboBox<>(tiposEmpleado);
+        int resultado = JOptionPane.showConfirmDialog(null, comboBoxTipo, "Seleccione el tipo de empleado", JOptionPane.OK_CANCEL_OPTION);
+        if (resultado != JOptionPane.OK_OPTION) {
+            return; // Salir si se canceló
+        }
+        String tipo = (String) comboBoxTipo.getSelectedItem();
 
         // Mostrar un combo box para seleccionar un departamento
         String[] departamentoNombres = departamentos.stream().map(Departamento::getNombre).toArray(String[]::new);
@@ -177,44 +185,58 @@ public class Main {
     }
 
     public static void generarReporte(JTextArea areaTexto) {
-        StringBuilder sb = new StringBuilder();
+        // Obtener la lista de IDs de empleados existentes
+        List<String> idsEmpleados = new ArrayList<>();
         for (Departamento d : departamentos) {
-            sb.append(d.toString()).append("\n");
+            for (Empleado e : d.getEmpleados()) {
+                idsEmpleados.add(e.getId());
+            }
         }
+
+        // Crear un JComboBox para seleccionar el empleado
+        JComboBox<String> comboBoxEmpleados = new JComboBox<>(idsEmpleados.toArray(new String[0]));
+        int resultado = JOptionPane.showConfirmDialog(null, comboBoxEmpleados, "Seleccione un empleado", JOptionPane.OK_CANCEL_OPTION);
+        if (resultado != JOptionPane.OK_OPTION) {
+            return; // Salir si se canceló
+        }
+
+        String idSeleccionado = (String) comboBoxEmpleados.getSelectedItem();
+        StringBuilder sb = new StringBuilder();
+        boolean encontrado = false;
+
+        for (Departamento departamento : departamentos) {
+            Empleado empleado = departamento.buscarEmpleadoPorId(idSeleccionado);
+            if (empleado != null) {
+                sb.append("Empleado encontrado:\n");
+                sb.append("ID: ").append(empleado.getId()).append("\n");
+                sb.append("Nombre: ").append(empleado.getNombre()).append("\n");
+                sb.append("Apellido: ").append(empleado.getApellido()).append("\n");
+                if (empleado instanceof EmpleadoPermanente) {
+                    sb.append("Tipo: Permanente\n");
+                    sb.append("Salario: ").append(((EmpleadoPermanente) empleado).getSalario()).append("\n");
+                } else if (empleado instanceof EmpleadoTemporal) {
+                    sb.append("Tipo: Temporal\n");
+                    sb.append("Duración del contrato: ").append(((EmpleadoTemporal) empleado).getDuracionContrato()).append(" meses\n");
+                }
+                sb.append("Departamento: ").append(departamento.getNombre()).append("\n");
+                encontrado = true;
+                break; // Salir del bucle si se encontró el empleado
+            }
+        }
+
+        if (!encontrado) {
+            sb.append("Empleado no encontrado.\n");
+        }
+
+        // Mostrar el reporte en el área de texto
         areaTexto.setText(sb.toString());
     }
 
     public static void eliminarEmpleado() {
-        String id = JOptionPane.showInputDialog("Ingrese el ID del empleado que desea eliminar:");
-        for (Departamento departamento : departamentos) {
-            Empleado empleado = departamento.buscarEmpleadoPorId(id);
-            if (empleado != null) {
-                try {
-                    departamento.eliminarEmpleado(empleado);
-                    JOptionPane.showMessageDialog(null, "Empleado eliminado con éxito.");
-                    return;
-                } catch (GestionException ex) {
-                    JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        }
-        JOptionPane.showMessageDialog(null, "Empleado no encontrado.");
+        // Implementar la funcionalidad para eliminar un empleado
     }
 
     public static void actualizarEmpleado() {
-        String id = JOptionPane.showInputDialog("Ingrese el ID del empleado que desea actualizar:");
-        String nuevoNombre = JOptionPane.showInputDialog("Ingrese el nuevo nombre:");
-        String nuevoApellido = JOptionPane.showInputDialog("Ingrese el nuevo apellido:");
-
-        for (Departamento departamento : departamentos) {
-            try {
-                departamento.actualizarEmpleado(id, nuevoNombre, nuevoApellido);
-                JOptionPane.showMessageDialog(null, "Empleado actualizado con éxito.");
-                return;
-            } catch (GestionException ex) {
-                JOptionPane.showMessageDialog(null, ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-            }
-        }
-        JOptionPane.showMessageDialog(null, "Empleado no encontrado.");
+        // Implementar la funcionalidad para actualizar un empleado
     }
 }
