@@ -31,9 +31,9 @@ public class ReporteDesempenio {
                         "Evaluación: %s\n" +
                         "Comentarios: %s\n" +
                         "------------------------------------\n",
-                empleado.getNombre(),  // Suponiendo que Empleado tiene un método getNombre()
-                empleado.getApellido(),  // Suponiendo que Empleado tiene un método getApellido()
-                empleado.getId(),  // Suponiendo que Empleado tiene un método getId()
+                empleado.getNombre(),
+                empleado.getApellido(),
+                empleado.getId(),
                 evaluacion,
                 comentarios
         );

@@ -6,12 +6,6 @@ public class EmpleadoTemporal extends Empleado {
         this.duracionContrato = duracionContrato;
     }
 
-    public int getDuracionContrato() {
-        return duracionContrato;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString() + String.format("Duración del contrato: %d meses\nTipo de empleado: Temporal\n", duracionContrato);
-    }
+    // Otros métodos específicos de EmpleadoTemporal
 }
+
