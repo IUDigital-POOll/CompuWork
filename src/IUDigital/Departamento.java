@@ -5,15 +5,17 @@ public class Departamento {
     private String id;
     private String nombre;
     private int capacidadMaxima;
-    private List<Empleado> empleados; // Lista de empleados en el departamento
+    private List<Empleado> empleados;
 
+    // Constructor
     public Departamento(String id, String nombre, int capacidadMaxima) {
         this.id = id;
         this.nombre = nombre;
         this.capacidadMaxima = capacidadMaxima;
-        this.empleados = new ArrayList<>(); // Inicializar la lista de empleados
+        this.empleados = new ArrayList<>();
     }
 
+    // Getters y Setters
     public String getId() {
         return id;
     }
@@ -22,28 +24,53 @@ public class Departamento {
         return nombre;
     }
 
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
     public int getCapacidadMaxima() {
         return capacidadMaxima;
     }
 
-    public List<Empleado> getEmpleados() { // Método que retorna la lista de empleados
+    public void setCapacidadMaxima(int capacidadMaxima) {
+        this.capacidadMaxima = capacidadMaxima;
+    }
+
+    public List<Empleado> getEmpleados() {
         return empleados;
     }
 
+    // Método para agregar un empleado al departamento
     public void agregarEmpleado(Empleado empleado) throws GestionException {
-        if (empleados.size() < capacidadMaxima) {
-            empleados.add(empleado);
+        if (empleados.size() >= capacidadMaxima) {
+            throw new GestionException("Capacidad máxima del departamento alcanzada.");
+        }
+        empleados.add(empleado);
+    }
+
+    // Método para eliminar un empleado por ID
+    public void eliminarEmpleadoPorId(String id) throws GestionException {
+        Empleado empleado = buscarEmpleadoPorId(id);
+        if (empleado != null) {
+            empleados.remove(empleado);
         } else {
-            throw new GestionException("Capacidad máxima alcanzada en el departamento " + nombre);
+            throw new GestionException("Empleado con ID " + id + " no encontrado.");
         }
     }
 
+    // Método para buscar un empleado por ID
     public Empleado buscarEmpleadoPorId(String id) {
         for (Empleado empleado : empleados) {
             if (empleado.getId().equals(id)) {
                 return empleado;
             }
         }
-        return null; // Retornar null si no se encuentra el empleado
+        return null;
+    }
+
+    // Método para actualizar el nombre y capacidad del departamento
+    public void actualizarDepartamento(String nuevoNombre, int nuevaCapacidadMaxima) {
+        setNombre(nuevoNombre);
+        setCapacidadMaxima(nuevaCapacidadMaxima);
     }
 }
