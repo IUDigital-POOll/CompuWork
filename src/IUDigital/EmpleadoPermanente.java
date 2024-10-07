@@ -1,3 +1,5 @@
+
+
 public class EmpleadoPermanente extends Empleado {
     private double salario;
 
@@ -10,15 +12,8 @@ public class EmpleadoPermanente extends Empleado {
         return salario;
     }
 
-    public void setSalario(double salario) {
-        this.salario = salario;
-    }
-
     @Override
     public String toString() {
-        return "EmpleadoPermanente{" +
-                "salario=" + salario +
-                ", " + super.toString() +
-                '}';
+        return super.toString() + String.format("Salario: %.2f\nTipo de empleado: Permanente\n", salario);
     }
 }
