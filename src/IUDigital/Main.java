@@ -1,4 +1,3 @@
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -35,7 +34,7 @@ public class Main {
         gbc.anchor = GridBagConstraints.CENTER;
         panel.add(label, gbc);
 
-        // Botón para agregar empleados
+        // Botones de acción
         JButton botonAgregarEmpleado = new JButton("Agregar Empleado");
         botonAgregarEmpleado.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
@@ -43,21 +42,18 @@ public class Main {
         gbc.gridwidth = 2;
         panel.add(botonAgregarEmpleado, gbc);
 
-        // Botón para crear departamentos
         JButton botonCrearDepartamento = new JButton("Crear Departamento");
         botonCrearDepartamento.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
         gbc.gridy = 2;
         panel.add(botonCrearDepartamento, gbc);
 
-        // Botón para eliminar departamentos
         JButton botonEliminarDepartamento = new JButton("Eliminar Departamento");
         botonEliminarDepartamento.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
         gbc.gridy = 3;
         panel.add(botonEliminarDepartamento, gbc);
 
-        // Botón para actualizar departamentos
         JButton botonActualizarDepartamento = new JButton("Actualizar Departamento");
         botonActualizarDepartamento.setFont(new Font("Arial", Font.BOLD, 16));
         gbc.gridx = 0;
@@ -99,7 +95,7 @@ public class Main {
         // Lógica para agregar empleados
         botonAgregarEmpleado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                agregarEmpleado();
+                agregarEmpleado(areaTexto);
             }
         });
 
@@ -132,7 +128,7 @@ public class Main {
 
         botonEliminarEmpleado.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
-                eliminarEmpleado();
+                eliminarEmpleado(areaTexto);
             }
         });
 
@@ -143,8 +139,52 @@ public class Main {
         });
     }
 
-    public static void agregarEmpleado() {
-        // Implementación existente para agregar empleados
+    public static void agregarEmpleado(JTextArea areaTexto) {
+        String departamentoNombre = (String) JOptionPane.showInputDialog(null,
+                "Seleccione el departamento al que desea agregar un empleado:",
+                "Agregar Empleado",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                departamentos.stream().map(Departamento::getNombre).toArray(String[]::new),
+                null);
+
+        if (departamentoNombre != null) {
+            String id = JOptionPane.showInputDialog("Ingrese el ID del empleado:");
+            String nombre = JOptionPane.showInputDialog("Ingrese el nombre del empleado:");
+            String apellido = JOptionPane.showInputDialog("Ingrese el apellido del empleado:");
+
+            String[] opciones = {"Temporal", "Permanente"};
+            String tipoEmpleado = (String) JOptionPane.showInputDialog(null,
+                    "Seleccione el tipo de empleado:",
+                    "Tipo de Empleado",
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    opciones,
+                    opciones[0]);
+
+            Empleado nuevoEmpleado = null;
+
+            if ("Temporal".equals(tipoEmpleado)) {
+                int duracionContrato = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la duración del contrato (en meses):"));
+                nuevoEmpleado = new EmpleadoTemporal(id, nombre, apellido, duracionContrato);
+            } else if ("Permanente".equals(tipoEmpleado)) {
+                double salario = Double.parseDouble(JOptionPane.showInputDialog("Ingrese el salario del empleado:"));
+                nuevoEmpleado = new EmpleadoPermanente(id, nombre, apellido, salario);
+            }
+
+            // Busca el departamento seleccionado y agrega el empleado
+            for (Departamento dep : departamentos) {
+                if (dep.getNombre().equals(departamentoNombre)) {
+                    try {
+                        dep.agregarEmpleado(nuevoEmpleado);
+                        areaTexto.append("Empleado agregado: " + nuevoEmpleado + "\n");
+                    } catch (GestionException ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     public static void crearDepartamento() {
@@ -206,16 +246,40 @@ public class Main {
     }
 
     public static void generarReporte(JTextArea areaTexto) {
-        // Implementación existente para generar reportes
+        // Implementar la lógica para generar el reporte de desempeño aquí
+        // Por ahora solo se mostrará un mensaje
+        JOptionPane.showMessageDialog(null, "Funcionalidad de generación de reportes no implementada aún.");
     }
 
-    public static void eliminarEmpleado() {
-        // Implementación para eliminar empleados
+    public static void eliminarEmpleado(JTextArea areaTexto) {
+        String departamentoNombre = (String) JOptionPane.showInputDialog(null,
+                "Seleccione el departamento del empleado a eliminar:",
+                "Eliminar Empleado",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                departamentos.stream().map(Departamento::getNombre).toArray(String[]::new),
+                null);
+
+        if (departamentoNombre != null) {
+            String idEmpleado = JOptionPane.showInputDialog("Ingrese el ID del empleado a eliminar:");
+
+            // Busca el departamento correspondiente
+            for (Departamento dep : departamentos) {
+                if (dep.getNombre().equals(departamentoNombre)) {
+                    try {
+                        dep.eliminarEmpleado(idEmpleado);
+                        areaTexto.append("Empleado eliminado con ID: " + idEmpleado + "\n");
+                    } catch (GestionException ex) {
+                        JOptionPane.showMessageDialog(null, ex.getMessage());
+                    }
+                    break;
+                }
+            }
+        }
     }
 
     public static void actualizarEmpleado() {
-        // Implementación para actualizar empleados
+        // Implementar la lógica para actualizar empleados aquí
+        JOptionPane.showMessageDialog(null, "Funcionalidad de actualización de empleados no implementada aún.");
     }
 }
-
-// Prueba
