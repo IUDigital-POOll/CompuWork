@@ -1,3 +1,4 @@
+package IUDigital;
 
 public class EmpleadoTemporal extends Empleado {
     private int duracionContrato;

@@ -1,4 +1,4 @@
-
+package IUDigital;
 
 public class EmpleadoPermanente extends Empleado {
     private double salario;
